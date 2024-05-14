@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+//GO into Intellisense configuration in the C/C++ extension and config the path to be usr/bin/gcc
 
 #define MEMORY_SIZE 2048
 #define MAX_INSTRUCTION_ADDRESS 1023
@@ -33,17 +34,9 @@ void initMemory() {
 }
 
 
-void print_binary(int num, int size) {
-    for (int bit = size; bit >= 0; bit--) {
-        printf("%d", (num >> bit) & 1);
-    }
-    printf("\n");
-}
-
-
 int main() {
 
-    //Instruction to be sent to the instruction part of the main memory
+    // //Instruction to be sent to the instruction part of the main memory
     int instruction;
 
     //Parsing of file
