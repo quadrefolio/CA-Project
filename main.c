@@ -42,116 +42,175 @@ int main() {
     //Parsing of file
     FILE *file = fopen("instructions.txt", "r");
     if (file == NULL) {
-        printf("Could not open file\n");
+        perror("Could not open file\n");
         return 1;
     }
 
-    char instructionTerm[10];
+    char instructionTerm[MAX_INSTRUCTION_LENGTH];
     
     char line[MAX_LINE_LENGTH];
     while (fgets(line, sizeof(line), file)) {
-        int field1;
-        int field2;
-        int field3;
-        sscanf(line, "%s R%d, R%d, R%d", instructionTerm, &field1, &field2, &field3);
 
-        printf("Field1 is :%d\n", field1);
-        printf("Field2 is :%d\n", field2);
-        printf("Field3 is :%d\n", field3);
-
-        int opcode;
-        int operand1 = field1;
-        int operand2 = field2;
-        int operand3 = field3;
-        int imm = field3;
-        int shamt = field3;
-        int address = field1;
-
-        printf("Field1 is :%d\n", operand1);
-        printf("Field1 is :%d\n", operand2);
-        printf("Field1 is :%d\n", operand3);
-        printf("Field1 is :%d\n", imm);
-        printf("Field1 is :%d\n", shamt);
-        printf("Field1 is :%d\n", address);
-        char instructionWord[MAX_INSTRUCTION_LENGTH];
-        unsigned int opcode;
+        //Fetching different formats of the instruction (R, I and J)
         int operand1;
         int operand2;
         int operand3;
-        int shamt;
         int imm;
+        int shamt;
         int address;
+
+        //Case of ADD, SUB, MUL, AND
+        if(sscanf(line, "%s R%d R%d R%d\n", instructionTerm, &operand1, &operand2, &operand3) == 4){
+            
+            if(strcmp(instructionTerm,"ADD") == 0 ||
+                strcmp(instructionTerm,"SUB") == 0 ||
+                strcmp(instructionTerm,"MUL") == 0||
+                strcmp(instructionTerm,"AND") == 0)
+            {
+                printf("%s\n", instructionTerm);
+                printf("First Register is :%d\n", operand1);
+                printf("Second Register is :%d\n", operand2);
+                printf("Third Register is :%d\n", operand3);
+
+            }
+            else {
+                perror("Invalid instruction: ");
+                printf("%s\n", instructionTerm);
+                return 1;
+            }
+            
+        }
+
+        //Case of JMP
+        else if((sscanf(line, "%s %d\n", instructionTerm, &address) == 2)){
+
+            if(strcmp(instructionTerm,"JMP") == 0)
+            {
+                printf("%s\n", instructionTerm);
+                printf("Address is :%d\n", address);
+
+            }
+            else {
+                perror("Invalid instruction: ");
+                printf("%s\n", instructionTerm);
+                return 1;
+            }
+            
+        }
+
+        // //Case of MOVI
+        else if(sscanf(line, "%s R%d %d\n", instructionTerm, &operand1, &imm) == 3){
+
+            if(strcmp(instructionTerm,"MOVI") == 0)
+            {
+                printf("%s\n", instructionTerm);
+                printf("First Register is :%d\n", operand1);
+                printf("Immediate is :%d\n", imm);
+
+            }
+            else {
+                perror("Invalid instruction: ");
+                printf("%s\n", instructionTerm);
+                return 1;
+            }
+            
+        }
+
+        //Case of JEQ, XORI, LSL, LSR, MOVR, MOVM
+        else if(sscanf(line, "%s R%d R%d %d\n", instructionTerm, &operand1, &operand2, &imm) == 4){
+
+            if(strcmp(instructionTerm,"JEQ") == 0 ||
+                strcmp(instructionTerm,"XORI") == 0||
+                strcmp(instructionTerm,"LSL") == 0||
+                strcmp(instructionTerm,"LSR") == 0||
+                strcmp(instructionTerm,"MOVR") == 0||
+                strcmp(instructionTerm,"MOVM") == 0)
+            {
+                shamt = imm;
+                printf("%s\n", instructionTerm);
+                printf("First Register is :%d\n", operand1);
+                printf("Second Register is :%d\n", operand2);
+                printf("Shamt is :%d\n", shamt);
+                printf("Immediate is :%d\n", imm);
+
+            }
+            else {
+                perror("Invalid instruction: ");
+                printf("%s\n", instructionTerm);
+                return 1;
+            } 
+        }
+        else {
+            perror("The instruction is of an unknown format. Cannot translate the instruction.\n");
+            return 1;
+        }
+
+        
+
+        unsigned int opcode;
+        
+        
+
+        // printf("operand1 is :%d\n", operand1);
+        // printf("operand2 is :%d\n", operand2);
+        // printf("operand3 is :%d\n", operand3);
+        // printf("imm is :%d\n", imm);
+        // printf("shamt is :%d\n", shamt);
+        // printf("address is :%d\n", address);
 
         // char operand1[MAX_OPERAND_LENGTH];
         // char operand2[MAX_OPERAND_LENGTH];
         // char operand3[MAX_OPERAND_LENGTH];
 
-        sscanf(line, "%s ", instructionWord);
-        printf("%s\n", instructionWord);
 
 
-        if(strcmp(instructionWord,"ADD") == 0){
+        if(strcmp(instructionTerm,"Add") == 0){
             opcode = 0b0000; //opcode = 0
             print_binary(opcode, 3);
-            printf("Add instruction\n");
         }
-        else if(strcmp(instructionWord, "SUB") == 0){
+        else if(strcmp(instructionTerm, "SUB") == 0){
             opcode = 0b0001; // opcode = 1
             print_binary(opcode, 3);
-            printf("Sub instruction\n");
         }
-        else if(strcmp(instructionWord, "MUL") == 0){
+        else if(strcmp(instructionTerm, "MUL") == 0){
             opcode = 0b0010; // opcode = 2
             print_binary(opcode, 3);
-            printf("Mul instruction\n");
         }
-        else if(strcmp(instructionWord, "MOVI") == 0){
+        else if(strcmp(instructionTerm, "MOVI") == 0){
             opcode = 0b0011; // opcode = 3
             print_binary(opcode, 3);
-            printf("Movi instruction\n");
         }
-        else if(strcmp(instructionWord, "JEQ") == 0){
+        else if(strcmp(instructionTerm, "JEQ") == 0){
             opcode = 0b0100; // opcode = 4
             print_binary(opcode, 3);
-            printf("Jeq instruction\n");
         }
-        else if(strcmp(instructionWord, "AND") == 0){
+        else if(strcmp(instructionTerm, "AND") == 0){
             opcode = 0b0101; // opcode = 5
             print_binary(opcode, 3);
-            printf("And instruction\n");
         }
-        else if(strcmp(instructionWord, "XORI") == 0){
+        else if(strcmp(instructionTerm, "XORI") == 0){
             opcode = 0b0110; // opcode = 6
             print_binary(opcode, 3);
-            printf("Xori instruction\n");
         }
-        else if(strcmp(instructionWord, "JMP") == 0){
+        else if(strcmp(instructionTerm, "JMP") == 0){
             opcode = 0b0111; // opcode = 7
             print_binary(opcode, 3);
-            printf("Jmp instruction");
         }
-        else if(strcmp(instructionWord,"LSL") == 0){
+        else if(strcmp(instructionTerm,"LSL") == 0){
             opcode = 0b1000; // opcode = 8
             print_binary(opcode, 3);
-            printf("Lsl instruction\n");
         }
-        else if(strcmp(instructionWord,"LSR") == 0){
+        else if(strcmp(instructionTerm,"LSR") == 0){
             opcode = 0b1001; // opcode = 9
             print_binary(opcode, 3);
-            printf("Lsr instruction\n");
         }
-        else if(strcmp(instructionWord, "MOVR") == 0){
+        else if(strcmp(instructionTerm, "MOVR") == 0){
             opcode = 0b1010; // opcode = 10
             print_binary(opcode, 3);
-            printf("Movr instruction\n");
         }
-        else if(strcmp(instructionWord, "MOVM") == 0){
+        else if(strcmp(instructionTerm, "MOVM") == 0){
             opcode = 0b1011; // opcode = 11
             print_binary(opcode, 3);
-            printf("Movm instruction\n");
-        }
-        else {
-            printf("Invalid instruction\n");
         }
         
         // if
@@ -201,6 +260,7 @@ int main() {
         //     //     opcode
 
         // }
+        printf("\n");
     }
 
     printf("\n");
