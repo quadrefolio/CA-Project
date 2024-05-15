@@ -28,6 +28,13 @@ void initMemory() {
     PC = 0;
 }
 
+void print_binary(int num, int size) {
+    for (int bit = size - 1; bit >= 0; bit--) {
+        printf("%d", (num >> bit) & 1);
+    }
+    printf("\n");
+}
+
 int translateFile() {
 
     //Initializing the memory and GPRs
@@ -156,51 +163,39 @@ int translateFile() {
 
         if(strcmp(instructionTerm,"ADD") == 0){
             opcode = 0;
-            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "SUB") == 0){
             opcode = 1;
-            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "MUL") == 0){
             opcode = 2;
-            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "MOVI") == 0){
             opcode = 3;
-            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "JEQ") == 0){
             opcode = 4;
-            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "AND") == 0){
             opcode = 5;
-            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "XORI") == 0){
             opcode = 6;
-            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "JMP") == 0){
             opcode = 7;
-            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm,"LSL") == 0){
             opcode = 8;
-            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm,"LSR") == 0){
             opcode = 9;
-            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "MOVR") == 0){
             opcode = 10;
-            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "MOVM") == 0){
             opcode = 11;
-            // print_binary(opcode, 3);
         }
 
         //Combining the fields into the instruction
@@ -381,14 +376,6 @@ void fetch(){
         decode(instruction); 
         PC++;
     }
-
-}
-
-void print_binary(int num, int size) {
-    for (int bit = size - 1; bit >= 0; bit--) {
-        printf("%d", (num >> bit) & 1);
-    }
-    printf("\n");
 }
 
 int main(){
