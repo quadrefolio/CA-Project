@@ -31,12 +31,14 @@ void initMemory() {
 int translateFile() {
 
     //Initializing the memory and GPRs
+    printf("Initializing the memory and the register file...\n\n");
     initMemory();
 
     //Instruction to be sent to the instruction part of the main memory
     int instruction;
 
     //Parsing file
+    printf("Opening the file...\n\n");
     FILE *file = fopen("instructions.txt", "r");
     if (file == NULL) {
         perror("Could not open file\n");
@@ -56,6 +58,10 @@ int translateFile() {
         int shamt;
         int address;
 
+        int num = PC + 1;
+
+
+        printf("Instruction %d: %s", num, line);
         //Case of ADD, SUB, MUL, AND
         if(sscanf(line, "%s R%d R%d R%d\n", instructionTerm, &operand1, &operand2, &operand3) == 4){
 
@@ -64,10 +70,10 @@ int translateFile() {
                 strcmp(instructionTerm,"MUL") == 0||
                 strcmp(instructionTerm,"AND") == 0)
             {
-                printf("%s\n", instructionTerm);
-                printf("First Register is :%d\n", operand1);
-                printf("Second Register is :%d\n", operand2);
-                printf("Third Register is :%d\n", operand3);
+                printf("Instruction term : %s\n", instructionTerm);
+                printf("First Register : %d\n", operand1);
+                printf("Second Register : %d\n", operand2);
+                printf("Third Register : %d\n", operand3);
 
             }
             else {
@@ -83,8 +89,8 @@ int translateFile() {
 
             if(strcmp(instructionTerm,"JMP") == 0)
             {
-                printf("%s\n", instructionTerm);
-                printf("Address is :%d\n", address);
+                printf("Instruction term : %s\n", instructionTerm);
+                printf("Address : %d\n", address);
 
             }
             else {
@@ -100,9 +106,9 @@ int translateFile() {
 
             if(strcmp(instructionTerm,"MOVI") == 0)
             {
-                printf("%s\n", instructionTerm);
-                printf("First Register is :%d\n", operand1);
-                printf("Immediate is :%d\n", imm);
+                printf("Instruction term : %s\n", instructionTerm);
+                printf("First Register : %d\n", operand1);
+                printf("Immediate : %d\n", imm);
 
             }
             else {
@@ -124,15 +130,15 @@ int translateFile() {
                 strcmp(instructionTerm,"MOVM") == 0)
             {
                 shamt = imm; //Needs to be checked
-                printf("%s\n", instructionTerm);
-                printf("First Register is :%d\n", operand1);
-                printf("Second Register is :%d\n", operand2);
+                printf("Instruction term : %s\n", instructionTerm);
+                printf("First Register : %d\n", operand1);
+                printf("Second Register : %d\n", operand2);
                 if(strcmp(instructionTerm,"LSL") == 0||
                 strcmp(instructionTerm,"LSR") == 0){
-                    printf("Shamt is :%d\n", shamt);
+                    printf("Shamt : %d\n", shamt);
                 }
                 else {
-                    printf("Immediate is :%d\n", imm);
+                    printf("Immediate : %d\n", imm);
                 }
             }
             else {
@@ -237,10 +243,11 @@ int translateFile() {
 
         //Store the instruction in the Instruction part of the main memory
         MainMemory[PC] = instruction;
-        printf("Value in Main Memory :%d\n", MainMemory[PC]);
-        printf("PC :%d\n", PC);
+        printf("Value in Main Memory : %d\n", MainMemory[PC]);
+        printf("Instruction format that will be saved in the memory: ");
         print_binary(instruction, 32);
         PC++;
+        printf("\n");
     }
 
     printf("\n");
@@ -386,10 +393,10 @@ void print_binary(int num, int size) {
 
 int main(){
 
-    printf("Parsing the file...\n");
+    printf("Parsing the file...\n\n");
     translateFile();
-    printf("-------------------\n");
-    printf("Fetching the instructions...\n");
+    printf("-------------------\n\n");
+    printf("Fetching the instructions...\n\n");
     fetch();
     return 0;
 
