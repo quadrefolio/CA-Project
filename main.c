@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 //GO into Intellisense configuration in the C/C++ extension and config the path to be usr/bin/gcc
 
 #define MEMORY_SIZE 2048
@@ -11,7 +12,7 @@
 #define MAX_OPERAND_LENGTH 10
 
 void print_binary(int num, int size) {
-    for (int bit = size; bit >= 0; bit--) {
+    for (int bit = size - 1; bit >= 0; bit--) {
         printf("%d", (num >> bit) & 1);
     }
     printf("\n");
@@ -61,7 +62,7 @@ int main() {
 
         //Case of ADD, SUB, MUL, AND
         if(sscanf(line, "%s R%d R%d R%d\n", instructionTerm, &operand1, &operand2, &operand3) == 4){
-            
+
             if(strcmp(instructionTerm,"ADD") == 0 ||
                 strcmp(instructionTerm,"SUB") == 0 ||
                 strcmp(instructionTerm,"MUL") == 0||
@@ -164,102 +165,76 @@ int main() {
 
 
 
-        if(strcmp(instructionTerm,"Add") == 0){
-            opcode = 0b0000; //opcode = 0
+        if(strcmp(instructionTerm,"ADD") == 0){
+            opcode = 0; //opcode = 0
             print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "SUB") == 0){
-            opcode = 0b0001; // opcode = 1
+            opcode = 1; // opcode = 1
             print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "MUL") == 0){
-            opcode = 0b0010; // opcode = 2
+            opcode = 2; // opcode = 2
             print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "MOVI") == 0){
-            opcode = 0b0011; // opcode = 3
+            opcode = 3; // opcode = 3
             print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "JEQ") == 0){
-            opcode = 0b0100; // opcode = 4
+            opcode = 4; // opcode = 4
             print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "AND") == 0){
-            opcode = 0b0101; // opcode = 5
+            opcode = 5; // opcode = 5
             print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "XORI") == 0){
-            opcode = 0b0110; // opcode = 6
+            opcode = 6; // opcode = 6
             print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "JMP") == 0){
-            opcode = 0b0111; // opcode = 7
+            opcode = 7; // opcode = 7
             print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm,"LSL") == 0){
-            opcode = 0b1000; // opcode = 8
+            opcode = 8; // opcode = 8
             print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm,"LSR") == 0){
-            opcode = 0b1001; // opcode = 9
+            opcode = 9; // opcode = 9
             print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "MOVR") == 0){
-            opcode = 0b1010; // opcode = 10
+            opcode = 10; // opcode = 10
             print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "MOVM") == 0){
-            opcode = 0b1011; // opcode = 11
+            opcode = 11; // opcode = 11
             print_binary(opcode, 3);
         }
-        
-        // if
-        // (
-        //     strcmp(instructionTerm, "ADD") || strcmp(instructionTerm, "SUB") || strcmp(instructionTerm, "MUL") || strcmp(instructionTerm, "AND") ||
-        //     strcmp(instructionTerm, "LSL") || strcmp(instructionTerm, "LSR")
-        // ){
-        //     sscanf(line, "");
-            // printf("%s", operand1);
-            // printf("%s", operand2);
-            // printf("%s", operand3);
 
-        //     if (strcmp(instructionTerm, "ADD") == 0) {
-        //         opcode = 0;
-        //     } else if (strcmp(instructionTerm, "SUB") == 0) {
-        //         opcode = 1;
-        //     } else if (strcmp(instructionTerm, "MUL") == 0) {
-        //         opcode = 2;
-        //     } else if (strcmp(instructionTerm, "AND") == 0) {
-        //         opcode = 5;
-        //     } else if (strcmp(instructionTerm, "LSL") == 0) {
-        //         opcode = 8;
-        //     } else if (strcmp(instructionTerm, "LSR") == 0) {
-        //         opcode = 9;
-        //     }
-        //     MainMemory[PC] = (opcode << 22) | (operand1 << 17) | (operand2 << 12) | (operand3 << 7);
-        //     PC++;
-        // } else if (strcmp(instructionTerm, "ADDI") || strcmp(instructionTerm, "SUBI") || strcmp(instructionTerm, "MULI") || strcmp(instructionTerm, "ANDI")){
-        //     sscanf(line, "%s R%d, R%d, #%d", instructionTerm, &operand1, &operand2, &imm);
-        //     if (strcmp(instructionTerm, "ADDI") == 0) {
-        //         opcode = 6;
-        //     } else if (strcmp(instructionTerm, "SUBI") == 0) {
-        //         opcode = 7;
-        //     } else if (strcmp(instructionTerm, "MULI") == 0) {
-        //         opcode = 8;
-        //     } else if (strcmp(instructionTerm, "ANDI") == 0) {
-        //         opcode = 9;
-        //     }
-        //     MainMemory[PC] = (opcode << 22) | (operand1 << 17) | (operand2 << 12) | (imm << 7);
-        //     PC++;
-        // } else if (strcmp(instructionTerm, "LD") || strcmp(instructionTerm, "ST")){
-        //     sscanf(line, "%s R%d, #%d", instructionTerm, &operand1, &address);
-        //     if (strcmp(instructionTerm, "LD") == 0) {
-        //         opcode = 10;
-        //     } 
-        //     // else if (strcmp(instructionTerm, "ST") == 0) {
-        //     //     opcode
+        switch(opcode){
+            case 0:
+            case 1:
+            case 2:
+            case 5:
+                instruction = (opcode << 28) | (operand1 << 23) | (operand2 << 18) | (operand3 << 13);
+                break;
+            case 4:
+            case 6:
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+                instruction = (opcode << 28) | (operand1 << 23) | (operand2 << 18) | imm;
+                break;
+            case 3: break;
+            case 7: break;
+            
+        }
 
-        // }
+        print_binary(instruction, 32);
         printf("\n");
     }
 
