@@ -29,10 +29,11 @@ void initMemory() {
 }
 
 int translateFile() {
+
     //Initializing the memory and GPRs
     initMemory();
 
-    // //Instruction to be sent to the instruction part of the main memory
+    //Instruction to be sent to the instruction part of the main memory
     int instruction;
 
     //Parsing file
