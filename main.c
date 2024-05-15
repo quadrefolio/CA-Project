@@ -18,7 +18,6 @@ void print_binary(int num, int size) {
     printf("\n");
 }
 
-
 //Initializing the Main Memory and the Register File (General Purpose Registers)
 int MainMemory[MEMORY_SIZE];
 int RegisterFile[32];
@@ -36,7 +35,8 @@ void initMemory() {
 
 
 int main() {
-
+    initMemory();
+    printf("%d \n",PC);
     // //Instruction to be sent to the instruction part of the main memory
     int instruction;
 
@@ -146,74 +146,58 @@ int main() {
             return 1;
         }
 
-        
-
         unsigned int opcode;
-        
-        
-
-        // printf("operand1 is :%d\n", operand1);
-        // printf("operand2 is :%d\n", operand2);
-        // printf("operand3 is :%d\n", operand3);
-        // printf("imm is :%d\n", imm);
-        // printf("shamt is :%d\n", shamt);
-        // printf("address is :%d\n", address);
-
-        // char operand1[MAX_OPERAND_LENGTH];
-        // char operand2[MAX_OPERAND_LENGTH];
-        // char operand3[MAX_OPERAND_LENGTH];
-
-
 
         if(strcmp(instructionTerm,"ADD") == 0){
-            opcode = 0; //opcode = 0
-            print_binary(opcode, 3);
+            opcode = 0;
+            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "SUB") == 0){
-            opcode = 1; // opcode = 1
-            print_binary(opcode, 3);
+            opcode = 1;
+            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "MUL") == 0){
-            opcode = 2; // opcode = 2
-            print_binary(opcode, 3);
+            opcode = 2;
+            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "MOVI") == 0){
-            opcode = 3; // opcode = 3
-            print_binary(opcode, 3);
+            opcode = 3;
+            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "JEQ") == 0){
-            opcode = 4; // opcode = 4
-            print_binary(opcode, 3);
+            opcode = 4;
+            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "AND") == 0){
-            opcode = 5; // opcode = 5
-            print_binary(opcode, 3);
+            opcode = 5;
+            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "XORI") == 0){
-            opcode = 6; // opcode = 6
-            print_binary(opcode, 3);
+            opcode = 6;
+            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "JMP") == 0){
-            opcode = 7; // opcode = 7
-            print_binary(opcode, 3);
+            opcode = 7;
+            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm,"LSL") == 0){
-            opcode = 8; // opcode = 8
-            print_binary(opcode, 3);
+            opcode = 8;
+            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm,"LSR") == 0){
-            opcode = 9; // opcode = 9
-            print_binary(opcode, 3);
+            opcode = 9;
+            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "MOVR") == 0){
-            opcode = 10; // opcode = 10
-            print_binary(opcode, 3);
+            opcode = 10;
+            // print_binary(opcode, 3);
         }
         else if(strcmp(instructionTerm, "MOVM") == 0){
-            opcode = 11; // opcode = 11
-            print_binary(opcode, 3);
+            opcode = 11;
+            // print_binary(opcode, 3);
         }
 
+        //Combining the fields into the instruction
         switch(opcode){
             case 0:
             case 1:
@@ -229,13 +213,21 @@ int main() {
             case 11:
                 instruction = (opcode << 28) | (operand1 << 23) | (operand2 << 18) | imm;
                 break;
-            case 3: break;
-            case 7: break;
-            
+            case 3:
+                instruction = (opcode << 28) | (operand1 << 23) | (0b00000 << 18) | imm;
+                break;
+            case 7:
+                instruction =  (opcode << 28) | address;
+                break;
+            default:break;
+
+            //Store the instruction in the Instruction part of the main memory
+            MainMemory[PC] = instruction;
+            PC++;
+            printf("%d\n", PC);
         }
 
-        print_binary(instruction, 32);
-        printf("\n");
+        
     }
 
     printf("\n");
