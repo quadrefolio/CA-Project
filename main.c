@@ -264,232 +264,244 @@ int Memory(int destination,int value,int write){
 }
 void writeback (int reg,int value){
 
-RegisterFile[reg]=value;
+    RegisterFile[reg]=value;
 
 }
 void exec (int oPCode,int R1,int R2,int R3,int shamt,int immediate,int address ){
     int result;
     switch (oPCode)
-{
-case 0:
-if(R1 !=0){
-    result=RegisterFile[R2]+RegisterFile[R3];
-    printf("value of result inside the exec add %d \n",result);
-    writeback(R1,result);
-    printf("value of register after the write back in the register file exec add %d \n",RegisterFile[R1]);
-    }
+    {
+        case 0:
+            if(R1 !=0 ){
+                result=RegisterFile[R2]+RegisterFile[R3];
+                printf("value of result inside the exec add %d \n",result);
+                writeback(R1,result);
+                printf("value of register after the write back in the register file exec add %d \n",RegisterFile[R1]);
+                }
 
-    // write back or mem not implemented yet donot forget to check for the R0 when writing back
-    break;
-case 1:
-        if(R1 !=0){
-    result=RegisterFile[R2] - RegisterFile[R3];
-    printf("value of result inside the exec sub %d \n",result);
-    writeback(R1,result);
-    printf("value of register after the write back in the register file exec sub %d \n",RegisterFile[R1]);
-    }
-          // write back or mem not implemented yet donot forget to check for the R0 when writing back
-    break;
-    case 2:
-      if(R1 !=0){
-    result=RegisterFile[R2] * RegisterFile[R3];
-    printf("value of result inside the exec mul %d \n",result);
-    writeback(R1,result);
-    printf("value of register after the write back in the register file exec mul %d \n",RegisterFile[R1]);
-    }
-         // write back or mem not implemented yet donot forget to check for the R0 when writing back
-    break;
-    case 3:
-    if(R1!=0){
-        printf("value of result inside the exec movi %d \n",RegisterFile[R1]);
-        writeback(R1,immediate);
-        printf("value of register after the write back in the register file exec movi %d \n",RegisterFile[R1]);
-    }
+                // write back or mem not implemented yet donot forget to check for the R0 when writing back
+                break;
+        case 1:
+            if(R1 !=0){
+                result=RegisterFile[R2] - RegisterFile[R3];
+                printf("value of result inside the exec sub %d \n",result);
+                writeback(R1,result);
+                printf("value of register after the write back in the register file exec sub %d \n",RegisterFile[R1]);
+                }
+                // write back or mem not implemented yet donot forget to check for the R0 when writing back
+                break;
+        case 2:
+                if(R1 !=0){
+                result=RegisterFile[R2] * RegisterFile[R3];
+                printf("value of result inside the exec mul %d \n",result);
+                writeback(R1,result);
+                printf("value of register after the write back in the register file exec mul %d \n",RegisterFile[R1]);
+                }
+                    // write back or mem not implemented yet donot forget to check for the R0 when writing back
+                break;
+        case 3:
+                if(R1!=0){
+                    printf("value of result inside the exec movi %d \n",RegisterFile[R1]);
+                    writeback(R1,immediate);
+                    printf("value of register after the write back in the register file exec movi %d \n",RegisterFile[R1]);
+                }
+                    
+                break;
+        case 4:
+                if(R1==R2){
+                    printf("value of PC before the jeq exec movi %d \n",PC);
+                    PC=PC+immediate;
+                    printf("value of PC after the jeq exec movi %d \n",PC);
+                }
+                break;
+        case 5:
+                if(R1!=0){
+                    result=RegisterFile[R2] & RegisterFile[R3];
+                    printf("value of result inside the exec And %d \n",result);
+                    writeback(R1,result);
+                    printf("value of register after the write back in the register file exec And %d \n",RegisterFile[R1]);
+
+                //might be a problem when anding because the values might not be binary to be checked 
+                }
+                break;
+        case 6:
+                if(R1!=0){
+                    result=RegisterFile[R2]^ immediate;
+                    printf("value of result inside the exec Xori %d \n",result);
+                    writeback(R1,result);
+                    printf("value of register after the write back in the register file exec Xori %d \n",RegisterFile[R1]);
+                //might be a problem when anding because the values might not be binary to be checked 
+                }
+                break;
+        case 7:
+                printf("value of PC inside the exec before jump %d \n",PC);
+                PC=(PC & 0b1111) << 28 ||address ;
+                printf("value of PC inside the exec after jump %d \n",PC);
+                break;
+        case 8:
+                if(R1!=0){
+                    result=RegisterFile[R2]<< shamt;
+                    printf("value of result inside the exec lsl %d \n",result);
+                    writeback(R1,result);
+                    printf("value of register after the write back in the register file exec lsl %d \n",RegisterFile[R1]);
+                    //might be a problem when anding because the values might not be binary to be checked 
+                }
+                
+                break;
+        case 9:
+                if(R1!=0){
+                    result=RegisterFile[R2]>> shamt;
+                    printf("value of result inside the exec lsr %d \n",result);
+                    writeback(R1,result);
+                    printf("value of register after the write back in the register file exec lsr %d \n",RegisterFile[R1]);
+                //might be a problem when anding because the values might not be binary to be checked 
+                }
+                break;
+        case 10:
+                if(R1!=0){
+                    int temp=RegisterFile[R2] + immediate;
+                    printf("value of address inside the exec movr %d \n",temp);
+                    result=Memory(temp,0,0);
+                    printf("value of result read from memory exec  movr  %d \n",result);
+                    writeback(R1,result);
+                    printf("value of result inside the register file after the write back exec  movr  %d \n",RegisterFile[R1]);
+                    }
+                break;
+        case 11:
+                int temp2 =RegisterFile[R2] + immediate;
+                printf("value of address inside the exec movw %d \n",temp2);
+                result=RegisterFile[R1];
+                printf("value of result inside the before the write in memory exec  movw  %d \n",result);
+                Memory(temp2,result,1);
+                printf("value of result inside the memory the write in memory exec  movw  %d \n",MainMemory[R1]);
+                break;
         
-    break;
-    case 4:
-       if(R1==R2){
-         printf("value of PC before the jeq exec movi %d \n",PC);
-        PC=PC+immediate;
-         printf("value of PC after the jeq exec movi %d \n",PC);
-       }
-    break;
-    case 5:
-          if(R1!=0){
-            result=RegisterFile[R2] & RegisterFile[R3];
-            printf("value of result inside the exec And %d \n",result);
-            writeback(R1,result);
-            printf("value of register after the write back in the register file exec And %d \n",RegisterFile[R1]);
-
-        //might be a problem when anding because the values might not be binary to be checked 
+        default:
+            printf("e4ma3 yabn el");
+            break;
     }
-    break;
-    case 6:
-        if(R1!=0){
-            result=RegisterFile[R2]^ immediate;
-            printf("value of result inside the exec Xori %d \n",result);
-            writeback(R1,result);
-            printf("value of register after the write back in the register file exec Xori %d \n",RegisterFile[R1]);
-        //might be a problem when anding because the values might not be binary to be checked 
-    }
-    break;
-    case 7:
-        printf("value of PC inside the exec before jump %d \n",PC);
-        PC=(PC & 0b1111) << 28 ||address ;
-        printf("value of PC inside the exec after jump %d \n",PC);
-    break;
-    case 8:
-    if(R1!=0){
-        result=RegisterFile[R2]<< shamt;
-        printf("value of result inside the exec lsl %d \n",result);
-         writeback(R1,result);
-         printf("value of register after the write back in the register file exec lsl %d \n",RegisterFile[R1]);
-        //might be a problem when anding because the values might not be binary to be checked 
-    }
-       
-    break;
-    case 9:
-           if(R1!=0){
-            result=RegisterFile[R2]>> shamt;
-            printf("value of result inside the exec lsr %d \n",result);
-            writeback(R1,result);
-            printf("value of register after the write back in the register file exec lsr %d \n",RegisterFile[R1]);
-        //might be a problem when anding because the values might not be binary to be checked 
-    }
-    break;
-    case 10:
-    if(R1!=0){
-        int temp=RegisterFile[R2] + immediate;
-        printf("value of address inside the exec movr %d \n",temp);
-        result=Memory(temp,0,0);
-        printf("value of result read from memory exec  movr  %d \n",result);
-        writeback(R1,result);
-        printf("value of result inside the register file after the write back exec  movr  %d \n",RegisterFile[R1]);
-        }
-    break;
-      case 11:
-        int temp2 =RegisterFile[R2] + immediate;
-        printf("value of address inside the exec movw %d \n",temp2);
-        result=RegisterFile[R1];
-        printf("value of result inside the before the write in memory exec  movw  %d \n",result);
-        Memory(temp2,result,1);
-        printf("value of result inside the memory the write in memory exec  movw  %d \n",MainMemory[R1]);
-    break;
-    
-default:
-    printf("e4ma3 yabn el");
-
-    break;
-}
 
 }
 
 void decode(int instruction){
-int oPCode=(instruction & 0b11110000000000000000000000000000)>>28;
-int Address=(instruction & 0b00001111111111111111111111111111);
-int R1=(instruction & 0b00001111100000000000000000000000)>>23;
-int R2=(instruction & 0b00000000011111000000000000000000)>>18;
-int R3=(instruction & 0b00000000000000111110000000000000)>>13;
-int shamt=(instruction & 0b00000000000000000001111111111111);
-int immediate=(instruction & 0b00000000000000111111111111111111);
+    int oPCode=(instruction & 0b11110000000000000000000000000000)>>28;
+    int Address=(instruction & 0b00001111111111111111111111111111);
+    int R1=(instruction & 0b00001111100000000000000000000000)>>23;
+    int R2=(instruction & 0b00000000011111000000000000000000)>>18;
+    int R3=(instruction & 0b00000000000000111110000000000000)>>13;
+    int shamt=(instruction & 0b00000000000000000001111111111111);
+    int immediate=(instruction & 0b00000000000000111111111111111111);
 
-switch (oPCode)
-{
-case 0:
-        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
-        printf("value of oPCode inside the decode ADD %d \n",oPCode);
-        printf("value of R1 inside the decode ADD %d \n",R1);
-        printf("value of R2 inside the decode ADD %d \n",R2);
-        printf("value of R3 inside the decode ADD %d \n",R3);
+    switch (oPCode)
+    {
+        case 0:
+            exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+            printf("value of oPCode inside the decode ADD %d \n",oPCode);
+            printf("value of R1 inside the decode ADD %d \n",R1);
+            printf("value of R2 inside the decode ADD %d \n",R2);
+            printf("value of R3 inside the decode ADD %d \n",R3);    
+            break;
+
+        case 1:
+            exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+            printf("value of oPCode inside the decode sub %d \n",oPCode);
+            printf("value of R1 inside the decode sub %d \n",R1);
+            printf("value of R2 inside the decode sub %d \n",R2);
+            printf("value of R3 inside the decode sub %d \n",R3);
+            break;
+
+        case 2:
+            exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+            printf("value of oPCode inside the decode mul %d \n",oPCode);
+            printf("value of R1 inside the decode mul %d \n",R1);
+            printf("value of R2 inside the decode mul %d \n",R2);
+            printf("value of R3 inside the decode mul %d \n",R3);
+
+            break;
+
+        case 3:// the value of r2 must be 0
+            exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+            printf("value of oPCode inside the decode movi %d \n",oPCode);
+            printf("value of R1 inside the decode movi %d \n",R1);
+            printf("value of R2 inside the decode movi %d \n",R2);
+            printf("value of immediate inside the decode movi %d \n",immediate);
+            break;
+
+        case 4:
+            exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+            printf("value of oPCode inside the decode jeq %d \n",oPCode);
+            printf("value of R1 inside the decode jeq %d \n",R1);
+            printf("value of R2 inside the decode jeq %d \n",R2);
+            printf("value of immediate inside the jeq  %d \n",immediate);
+            break;
+
+        case 5:
+            exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+            printf("value of oPCode inside the decode And %d \n",oPCode);
+            printf("value of R1 inside the decode And %d \n",R1);
+            printf("value of R2 inside the decode And %d \n",R2);
+            printf("value of immediate inside the And %d \n",R3);
+            break;
+
+        case 6:
+            exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+            printf("value of oPCode inside the decode xori %d \n",oPCode);
+            printf("value of R1 inside the decode xori %d \n",R1);
+            printf("value of R2 inside the decode xori %d \n",R2);
+            printf("value of immediate inside the xori  %d \n",immediate);
+            break;
+
+        case 7:
+            exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+            printf("value of oPCode inside the decode jmp %d \n",oPCode);
+            printf("value of immediate inside the decode jmp %d \n",Address);
+            break;
+
+        case 8:
+            exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+            printf("value of oPCode inside the decode lsl %d \n",oPCode);
+            printf("value of R1 inside the decode lsl %d \n",R1);
+            printf("value of R2 inside the decode lsl %d \n",R2);
+            printf("value of immediate inside the decode lsl %d \n",shamt);
+            break;
+
+        case 9:
+            exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+            printf("value of oPCode inside the decode lsr %d \n",oPCode);
+            printf("value of R1 inside the decode lsr %d \n",R1);
+            printf("value of R2 inside the decode lsr %d \n",R2);
+            printf("value of immediate inside the decode lsr %d \n",shamt);
+            break;
+
+        case 10:
+            exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+            printf("value of oPCode inside the decode movr %d \n",oPCode);
+            printf("value of R1 inside the decode movr %d \n",R1);
+            printf("value of R2 inside the decode movr %d \n",R2);
+            printf("value of immediate inside the decode movr %d \n",immediate);
+            break;
+
+        case 11:
+            exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+            printf("value of oPCode inside the decode movm %d \n",oPCode);
+            printf("value of R1 inside the decode movm %d \n",R1);
+            printf("value of R2 inside the decode movm %d \n",R2);
+            printf("value of immediate inside the decode movm %d \n",immediate);
+            break;
         
-    break;
-case 1:
-        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
-        printf("value of oPCode inside the decode sub %d \n",oPCode);
-        printf("value of R1 inside the decode sub %d \n",R1);
-        printf("value of R2 inside the decode sub %d \n",R2);
-        printf("value of R3 inside the decode sub %d \n",R3);
-    break;
-    case 2:
-        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
-         printf("value of oPCode inside the decode mul %d \n",oPCode);
-        printf("value of R1 inside the decode mul %d \n",R1);
-        printf("value of R2 inside the decode mul %d \n",R2);
-        printf("value of R3 inside the decode mul %d \n",R3);
-
-    break;
-    case 3:// the value of r2 must be 0
-        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
-         printf("value of oPCode inside the decode movi %d \n",oPCode);
-        printf("value of R1 inside the decode movi %d \n",R1);
-        printf("value of R2 inside the decode movi %d \n",R2);
-        printf("value of immediate inside the decode movi %d \n",immediate);
-    break;
-    case 4:
-        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
-         printf("value of oPCode inside the decode jeq %d \n",oPCode);
-        printf("value of R1 inside the decode jeq %d \n",R1);
-        printf("value of R2 inside the decode jeq %d \n",R2);
-        printf("value of immediate inside the jeq  %d \n",immediate);
-    break;
-    case 5:
-        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
-        printf("value of oPCode inside the decode And %d \n",oPCode);
-        printf("value of R1 inside the decode And %d \n",R1);
-        printf("value of R2 inside the decode And %d \n",R2);
-        printf("value of immediate inside the And %d \n",R3);
-    break;
-    case 6:
-        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
-         printf("value of oPCode inside the decode xori %d \n",oPCode);
-        printf("value of R1 inside the decode xori %d \n",R1);
-        printf("value of R2 inside the decode xori %d \n",R2);
-        printf("value of immediate inside the xori  %d \n",immediate);
-    break;
-    case 7:
-        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
-         printf("value of oPCode inside the decode jmp %d \n",oPCode);
-        printf("value of immediate inside the decode jmp %d \n",Address);
-    break;
-    case 8:
-        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
-        printf("value of oPCode inside the decode lsl %d \n",oPCode);
-        printf("value of R1 inside the decode lsl %d \n",R1);
-        printf("value of R2 inside the decode lsl %d \n",R2);
-        printf("value of immediate inside the decode lsl %d \n",shamt);
-    break;
-    case 9:
-        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
-        printf("value of oPCode inside the decode lsr %d \n",oPCode);
-        printf("value of R1 inside the decode lsr %d \n",R1);
-        printf("value of R2 inside the decode lsr %d \n",R2);
-        printf("value of immediate inside the decode lsr %d \n",shamt);
-    break;
-    case 10:
-        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
-        printf("value of oPCode inside the decode movr %d \n",oPCode);
-        printf("value of R1 inside the decode movr %d \n",R1);
-        printf("value of R2 inside the decode movr %d \n",R2);
-        printf("value of immediate inside the decode movr %d \n",immediate);
-    break;
-      case 11:
-        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
-         printf("value of oPCode inside the decode movm %d \n",oPCode);
-        printf("value of R1 inside the decode movm %d \n",R1);
-        printf("value of R2 inside the decode movm %d \n",R2);
-        printf("value of immediate inside the decode movm %d \n",immediate);
-    break;
-    
-default:
-    printf("error in the decode");
-    break;
-}
+        default:
+            printf("error in the decode");
+            break;
+    }
 }
 
 void fetch(){
-    int instruction=MainMemory[PC];
-    if(PC<=1023){
-        decode(instruction); 
+    int instruction = MainMemory[PC];
+    printf("Fetching instruction from address %d: ", PC); print_binary(instruction, 32);
+    if(PC <= 1023){
+        printf("Decoding instruction : "); print_binary(instruction, 32);
+        decode(instruction);
+        printf("Incrementing PC...\n");
         PC++;
     }
 }
@@ -498,9 +510,11 @@ int main(){
 
     printf("Parsing the file...\n\n");
     translateFile();
+
     printf("-------------------\n\n");
-    printf("Fetching the instructions...\n\n");
+
     fetch();
+
     return 0;
 
 }
