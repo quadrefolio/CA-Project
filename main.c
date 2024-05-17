@@ -345,7 +345,7 @@ void exec (int oPCode,int R1,int R2,int R3,int shamt,int immediate,int address )
                 break;
         case 7:
                 printf("value of PC inside the exec before jump %d \n",PC);
-                PC=(PC & 0b1111) << 28 ||address ;
+                PC=(PC & 0b11110000000000000000000000000000)  + address ;
                 printf("value of PC inside the exec after jump %d \n",PC);
                 break;
         case 8:
@@ -397,36 +397,41 @@ void exec (int oPCode,int R1,int R2,int R3,int shamt,int immediate,int address )
 }
 
 void decode(int instruction){
-    int oPCode=(instruction & 0b11110000000000000000000000000000)>>28;
-    int Address=(instruction & 0b00001111111111111111111111111111);
-    int R1=(instruction & 0b00001111100000000000000000000000)>>23;
-    int R2=(instruction & 0b00000000011111000000000000000000)>>18;
-    int R3=(instruction & 0b00000000000000111110000000000000)>>13;
-    int shamt=(instruction & 0b00000000000000000001111111111111);
-    //Handle the negative value of the immediate
-    int immediate=(instruction & 0b00000000000000111111111111111111);
-
-    switch (oPCode)
-    {
-        case 0:
-            printf("value of oPCode inside the decode ADD: %d \n",oPCode);
-            printf("value of R%d inside the decode ADD: %d \n",R1, RegisterFile[R1]);
-            printf("value of R%d inside the decode ADD: %d \n",R2, RegisterFile[R2]);
-            printf("value of R%d inside the decode ADD: %d \n",R3, RegisterFile[R3]);    
-            break;
-
-        case 1:
-            printf("value of oPCode inside the decode sub: %d \n",oPCode);
-            printf("value of R%d inside the decode sub: %d \n",R1, RegisterFile[R1]);
-            printf("value of R%d inside the decode sub: %d \n",R2, RegisterFile[R2]);
-            printf("value of R%d inside the decode sub: %d \n",R3, RegisterFile[R3]);
-            break;
-
-        case 2:
-            printf("value of oPCode inside the decode mul: %d \n",oPCode);
-            printf("value of R%d inside the decode mul: %d \n",R1, RegisterFile[R1]);
-            printf("value of R%d inside the decode mul: %d \n",R2, RegisterFile[R2]);
-            printf("value of R%d inside the decode mul: %d \n",R3, RegisterFile[R3]);
+int oPCode=(instruction & 0b11110000000000000000000000000000)>>28;
+int Address=(instruction & 0b00001111111111111111111111111111);
+int R1=(instruction & 0b00001111100000000000000000000000)>>23;
+int R2=(instruction & 0b00000000011111000000000000000000)>>18;
+int R3=(instruction & 0b00000000000000111110000000000000)>>13;
+int shamt=(instruction & 0b00000000000000000001111111111111);
+int immediate=(instruction & 0b00000000000000111111111111111111);
+int check=(0b00000000000000100000000000000000 & immediate)>> 17;
+if(check==1)
+{
+immediate=immediate | 0b11111111111111000000000000000000;                   
+}
+switch (oPCode)
+{
+case 0:
+        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+        printf("value of oPCode inside the decode ADD %d \n",oPCode);
+        printf("value of R1 inside the decode ADD %d \n",R1);
+        printf("value of R2 inside the decode ADD %d \n",R2);
+        printf("value of R3 inside the decode ADD %d \n",R3);
+        
+    break;
+case 1:
+        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+        printf("value of oPCode inside the decode sub %d \n",oPCode);
+        printf("value of R1 inside the decode sub %d \n",R1);
+        printf("value of R2 inside the decode sub %d \n",R2);
+        printf("value of R3 inside the decode sub %d \n",R3);
+    break;
+    case 2:
+        exec(oPCode,R1,R2,R3,shamt,immediate,Address);
+         printf("value of oPCode inside the decode mul %d \n",oPCode);
+        printf("value of R1 inside the decode mul %d \n",R1);
+        printf("value of R2 inside the decode mul %d \n",R2);
+        printf("value of R3 inside the decode mul %d \n",R3);
 
             break;
 
@@ -523,5 +528,5 @@ int main(){
     fetch();
 
     return 0;
-
+    
 }
