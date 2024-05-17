@@ -345,7 +345,7 @@ void exec (int oPCode,int R1,int R2,int R3,int shamt,int immediate,int address )
                 break;
         case 7:
                 printf("value of PC inside the exec before jump %d \n",PC);
-                PC=(PC & 0b1111) << 28 ||address ;
+                PC=(PC & 0b11110000000000000000000000000000)  + address ;
                 printf("value of PC inside the exec after jump %d \n",PC);
                 break;
         case 8:
