@@ -392,7 +392,11 @@ int R2=(instruction & 0b00000000011111000000000000000000)>>18;
 int R3=(instruction & 0b00000000000000111110000000000000)>>13;
 int shamt=(instruction & 0b00000000000000000001111111111111);
 int immediate=(instruction & 0b00000000000000111111111111111111);
-
+int check=(0b00000000000000100000000000000000 & immediate)>> 17;
+if(check==1)
+{
+immediate=immediate | 0b11111111111111000000000000000000;                   
+}
 switch (oPCode)
 {
 case 0:
@@ -502,5 +506,5 @@ int main(){
     printf("Fetching the instructions...\n\n");
     fetch();
     return 0;
-
+    
 }
